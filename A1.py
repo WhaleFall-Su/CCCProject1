@@ -175,6 +175,7 @@ city_dic = get_city_no(location)
 def tweets_in_city(location,tweet_file):
     city_count = {'1gsyd':0,'2gmel':0,'3gbri':0,'4gade':0,'5gper':0,'6ghob':0,'7gdar':0,
                   '8acte':0,'9oter':0}
+    location_keys = list(location.keys())
     tweets_size = len(tweet_file)
     for i in range(0,tweets_size):
         t = tweet_file[i]
@@ -187,40 +188,43 @@ def tweets_in_city(location,tweet_file):
         for ele in names:
             ele = ele.lower()
             print(ele)
-            if ele in location['1gsyd']:
-                city_count['1gsyd'] += 1
+            if ele in location_keys:
+                gcc = location[ele]
+                city_count[gcc] += 1
                 break
-            elif ele in location['2gmel']:
-                city_count['2gmel'] += 1
-                break
-            elif ele in location['3gbri']:
-                city_count['3gbri'] += 1
-                break
-            elif ele in location['4gade']:
-                city_count['4gade'] += 1
-                break
-            elif ele in location['5gper']:
-                city_count['5gper'] += 1
-                break
-            elif ele in location['6ghob']:
-                city_count['6ghob'] += 1
-                break
-            elif ele in location['7gdar']:
-                city_count['7gdar'] += 1
-                break
-            elif ele in location['8acte']:
-                city_count['8acte'] += 1
-                break
-            elif ele in location['9oter']:
-                city_count['9oter'] += 1
-                break
+#                 city_count['1gsyd'] += 1
+#                 break
+#             elif ele in location['2gmel']:
+#                 city_count['2gmel'] += 1
+#                 break
+#             elif ele in location['3gbri']:
+#                 city_count['3gbri'] += 1
+#                 break
+#             elif ele in location['4gade']:
+#                 city_count['4gade'] += 1
+#                 break
+#             elif ele in location['5gper']:
+#                 city_count['5gper'] += 1
+#                 break
+#             elif ele in location['6ghob']:
+#                 city_count['6ghob'] += 1
+#                 break
+#             elif ele in location['7gdar']:
+#                 city_count['7gdar'] += 1
+#                 break
+#             elif ele in location['8acte']:
+#                 city_count['8acte'] += 1
+#                 break
+#             elif ele in location['9oter']:
+#                 city_count['9oter'] += 1
+#                 break
     sorted_city = sorted(city_count.items(), key=lambda item: item[1])
     sorted_city.reverse()
     return sorted_city
 
 city_name = ['(Greater Sydney)','(Greater Melbourne)','(Greater Brisbane)','(Greater Adelaide)','(Greater Preth)',
              '(Greater Hobart)','(Greater Darwin)','(Australian Capital Territory)','(Others)']
-city_tweets_count = tweets_in_city(city_dic,tweet)
+city_tweets_count = tweets_in_city(city_belong_dic,tweet)
 print ("{:<25} {:<25}".format('Greater Capital City','Number of Tweets Made'))
 for i in range(0,9):
     gcc = city_tweets_count[i][0]
