@@ -43,7 +43,6 @@ def sum_dict_task3(a,b):
     set_combine = set()
     city_cnt_list = []
     # python3,dict_keys类似set； | 并集
-    print((a, b))
     for key in a.keys() | b.keys():
         temp[key] = [{}, 0, set()]
         for d in (a,b):
@@ -163,64 +162,53 @@ with open('./twitter-data-small.json', 'r', encoding='utf-8') as tweets_file:
         else:
             tweet_str += new_line
 
-    # # Task 1 output
-    # # sort by the number of tweets
-    #
-    # top_author_list = comm.gather(top_author, root=0)
-    # # print("top10_author is ", top10_author_list)
-    # if rank == 0:
-    #
-    #     # merge dict 解决不同进程处理的文件段中存在author id重复的情况
-    #     merged_dict = reduce(sum_dict, top_author_list)
-    #
-    #     # print(merged_dict)
-    #     sort_author = sorted(merged_dict.items(), key=lambda item: item[1])
-    #     sort_author.reverse()
-    #
-    #     # get top 10
-    #     top10_author = sort_author[0:10]
-    #     print("{:<25} {:<25} {:<25}".format('Rank', 'Author ID', 'Number of Tweets Made'))
-    #     for i in range(0, 10):
-    #         rank = '#' + str(i + 1)
-    #         author_id = top10_author[i][0]
-    #         num = top10_author[i][1]
-    #         print("{:<25} {:<25} {:<25}".format(rank, author_id, num))
-    #
-    #     print('\n', '\n')
-    #     print(time.time() - begin_time)
+    # Task 1 output
 
-    # # Task 2  output
-    # print(top_city)
-    # top_city_list = comm.gather(top_city, root=0)
-    # # print("top10_author is ", top10_author_list)
-    # if rank == 0:
-    #     # merge dict 解决不同进程处理的文件段中存在author id重复的情况
-    #     merged_dict = reduce(sum_dict, top_city_list)
-    #     sorted_city = sorted(merged_dict.items(), key=lambda item: item[1])
-    #     sorted_city.reverse()
-    #     city_name = ['(Greater Sydney)', '(Greater Melbourne)', '(Greater Brisbane)', '(Greater Adelaide)',
-    #                  '(Greater Preth)',
-    #                  '(Greater Hobart)', '(Greater Darwin)', '(Australian Capital Territory)', '(Others)']
-    #
-    #     print("{:<25} {:<25}".format('Greater Capital City', 'Number of Tweets Made'))
-    #     for i in range(0, 9):
-    #         gcc = sorted_city[i][0]
-    #         city_index = int(gcc[0]) - 1
-    #         name = gcc + city_name[city_index]
-    #         num = sorted_city[i][1]
-    #         print("{:<35} {:<25}".format(name, num))
-    #     print('\n', '\n')
-    #     print(time.time() - begin_time)
 
-    # Task 3  output
-    # sort by number of city
-    # print(author_dict)
-    # print('\n')
-    # print('\n')
+    top_author_list = comm.gather(top_author, root=0)
+    top_city_list = comm.gather(top_city, root=0)
     author_dict_list = comm.gather(author_dict, root=0)
-    # print(author_dict_list)
-    # print("top10_author is ", top10_author_list)
     if rank == 0:
+
+        # merge dict 解决不同进程处理的文件段中存在author id重复的情况
+        merged_dict = reduce(sum_dict, top_author_list)
+
+        # print(merged_dict)
+        sort_author = sorted(merged_dict.items(), key=lambda item: item[1])
+        sort_author.reverse()
+
+        # get top 10
+        top10_author = sort_author[0:10]
+        print("{:<25} {:<25} {:<25}".format('Rank', 'Author ID', 'Number of Tweets Made'))
+        for i in range(0, 10):
+            rank = '#' + str(i + 1)
+            author_id = top10_author[i][0]
+            num = top10_author[i][1]
+            print("{:<25} {:<25} {:<25}".format(rank, author_id, num))
+
+        print('\n', '\n')
+        print(time.time() - begin_time)
+
+        # Task 2  output
+        # merge dict 解决不同进程处理的文件段中存在author id重复的情况
+        merged_dict = reduce(sum_dict, top_city_list)
+        sorted_city = sorted(merged_dict.items(), key=lambda item: item[1])
+        sorted_city.reverse()
+        city_name = ['(Greater Sydney)', '(Greater Melbourne)', '(Greater Brisbane)', '(Greater Adelaide)',
+                     '(Greater Preth)',
+                     '(Greater Hobart)', '(Greater Darwin)', '(Australian Capital Territory)', '(Others)']
+
+        print("{:<25} {:<25}".format('Greater Capital City', 'Number of Tweets Made'))
+        for i in range(0, 9):
+            gcc = sorted_city[i][0]
+            city_index = int(gcc[0]) - 1
+            name = gcc + city_name[city_index]
+            num = sorted_city[i][1]
+            print("{:<35} {:<25}".format(name, num))
+        print('\n', '\n')
+        print(time.time() - begin_time)
+
+        # Task 3  output
         # merge dict 解决不同进程处理的文件段中存在author id重复的情况
         merged_dict = reduce(sum_dict_task3, author_dict_list)
 
